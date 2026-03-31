@@ -581,7 +581,7 @@ body.on-s1 .logo-tr { opacity: 0; }
 }
 
 /* ─────────────────────────────────────────────────────
-   RESPONSIVE
+   RESPONSIVE — desktop breakpoints (landscape/wide)
 ───────────────────────────────────────────────────── */
 @media (max-height: 700px) {
   :root { --pad: clamp(1.2rem,3vw,2.5rem); }
@@ -592,12 +592,166 @@ body.on-s1 .logo-tr { opacity: 0; }
   #s2 .pillars { grid-template-columns: repeat(2,1fr); }
   #s3 .team-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 900px) {
-  #s1, #s3, #s4 { grid-template-columns: 1fr; }
-  #s1 .right, #s3 .right, #s4 .right { display: none; }
+
+/* ─────────────────────────────────────────────────────
+   TABLET — 601px to 900px wide
+───────────────────────────────────────────────────── */
+@media (min-width: 601px) and (max-width: 900px) {
+  #s1 { grid-template-columns: 1fr; }
+  #s1 .right { display: none; }
   #s2 .pillars { grid-template-columns: repeat(2,1fr); }
+  #s3 { grid-template-columns: 1fr; }
+  #s3 .right { display: none; }
   #s3 .team-grid { grid-template-columns: repeat(2,1fr); }
+  #s4 { grid-template-columns: 1fr; }
+  #s4 .right { display: none; }
 }
+
+/* ─────────────────────────────────────────────────────
+   MOBILE — portrait screens ≤ 600px wide
+   All rules here are mobile-only overrides.
+   Desktop layout (> 600px) is completely unaffected.
+───────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+
+  /* ── Global chrome ── */
+  /* Arrow buttons: lift them up so they don't overlap footer text */
+  .nav-arrows {
+    bottom: clamp(52px, 8vh, 72px);
+  }
+
+  /* Reduce padding throughout */
+  :root { --pad: 1.4rem; }
+
+  /* ── S02 — keep the 2×2 pillar grid on mobile (same as before, untouched) ── */
+  #s2 .pillars { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── S01 — Cover: stack logo above content ── */
+  #s1 {
+    /* Switch from side-by-side grid to top/bottom flex */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  /* Logo panel: top ~35% of screen, visible on mobile */
+  #s1 .right {
+    display: flex;              /* show it (was hidden at 900px) */
+    order: -1;                  /* push above the text */
+    flex: 0 0 32vh;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+  }
+  #s1 .right .big-logo {
+    width: clamp(100px, 38vw, 160px);
+    opacity: .85;
+  }
+  /* Text panel: takes remaining space */
+  #s1 .left {
+    flex: 1;
+    justify-content: flex-start;
+    padding-top: 1rem;
+  }
+  /* Smaller title so it fits single line and doesn't overlap dots */
+  #s1 h1 {
+    font-size: clamp(2rem, 10vw, 3rem);
+    white-space: normal;        /* allow wrapping if needed */
+    margin-bottom: .6rem;
+  }
+  #s1 .eyebrow { margin-bottom: .8rem; }
+  #s1 .tagline { margin-bottom: 1.2rem; font-size: .88rem; }
+  #s1 .meta { gap: 1.2rem; flex-wrap: wrap; padding-top: .9rem; }
+
+  /* ── S03 — Our Team: full-width, bg image behind content ── */
+  #s3 {
+    display: flex;
+    flex-direction: column;
+    position: relative;   /* needed so absolute bg sits inside slide */
+  }
+  /* Show the photo as a full-bleed background layer */
+  #s3 .right {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #s3 .right img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    filter: brightness(.38) saturate(.55);
+  }
+  #s3 .right::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg,
+      rgba(8,8,8,.97) 0%,
+      rgba(8,8,8,.82) 60%,
+      rgba(8,8,8,.88) 100%);
+  }
+  /* Content sits above the bg */
+  #s3 .left {
+    position: relative; z-index: 1;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #s3 h2 { font-size: clamp(1.5rem, 6.5vw, 2.2rem); margin-bottom: .8rem; }
+  /* 2 columns × 3 rows — tighter to fit all 6 on screen */
+  #s3 .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    max-width: 100%;
+  }
+  #s3 .tc {
+    padding: .6rem .55rem;
+    gap: 7px;
+    transition: background .3s;
+    overflow: hidden;       /* prevent any cell from exceeding column width */
+  }
+  #s3 .tc:hover { transform: none; box-shadow: none; }
+  #s3 .tc-icon {
+    width: 22px; height: 22px;
+    font-size: 10px; flex-shrink: 0;
+  }
+  /* Remove nowrap so text wraps within the column width */
+  #s3 .tc-en  { font-size: .58rem; white-space: normal; }
+  #s3 .tc-zh  { font-size: .56rem; white-space: normal; }
+  #s3 .tc-org { font-size: .52rem; white-space: normal; }
+
+  /* ── S04 — Athletes: show background image on mobile ── */
+  #s4 {
+    display: flex;
+    flex-direction: column;
+  }
+  #s4 .right {
+    /* Keep as an absolute background behind the content */
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #s4 .right img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: right center;
+    filter: brightness(.28) saturate(.45);
+  }
+  #s4 .right::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(8,8,8,.97) 0%,
+      rgba(8,8,8,.88) 60%,
+      rgba(8,8,8,.75) 100%);
+  }
+  #s4 .left {
+    position: relative; z-index: 2;
+    flex: 1;
+    padding: var(--pad);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   REDUCED MOTION
+───────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
 }
@@ -848,7 +1002,7 @@ body.on-s1 .logo-tr { opacity: 0; }
   </div>
   <!-- Content wrapper fills height and centres everything -->
   <div class="close-wrap">
-    <div class="c-pre reveal d1">Just Fade Academy · Los Angeles</div>
+    <div class="c-pre reveal d1"></div>
     <div class="c-logo reveal d2">
       <img src="https://images.squarespace-cdn.com/content/649a1ebfd8531f2969e03ac2/22dcdb05-6817-4d39-94cb-aed9970604fb/IMG_3783.PNG?content-type=image%2Fpng"
            alt="Just Fade Academy">
